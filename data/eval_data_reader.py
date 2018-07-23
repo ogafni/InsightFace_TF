@@ -8,12 +8,12 @@ import cv2
 import io
 import PIL.Image
 import mxnet.ndarray as nd
-
+import re
 
 def get_parser():
     parser = argparse.ArgumentParser(description='evluation data parser')
-    parser.add_argument('--eval_datasets', default=['lfw', 'cfp_ff', 'cfp_fp', 'agedb_30'], help='evluation datasets')
-    # parser.add_argument('--eval_datasets', default=['cfp_fp'], help='evluation datasets')
+    # parser.add_argument('--eval_datasets', default=['lfw', 'cfp_ff', 'cfp_fp', 'agedb_30'], help='evluation datasets')
+    parser.add_argument('--eval_datasets', default=['lfw'], help='evluation datasets')
     parser.add_argument('--eval_db_path', default='../datasets/faces_ms1m_112x112', help='evluate datasets base path')
     parser.add_argument('--image_size', default=[112, 112], help='the image size')
     parser.add_argument('--tfrecords_file_path', default='../datasets/tfrecords/eval', help='the image size')
@@ -123,15 +123,57 @@ def load_bin(db_name, image_size, args):
         _bin = bins[i]
         img = mx.image.imdecode(_bin).asnumpy()
         img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+
+        cv2.imwrite(os.path.join('/home/deepjunior/PycharmProjects/unit_swap/InsightFace_TF/datasets/lfw_images', str(i).zfill(5)+'.jpg'), img)
         for flip in [0,1]:
             if flip == 1:
                 img = np.fliplr(img)
+
             data_list[flip][i, ...] = img
         i += 1
         if i % 1000 == 0:
             print('loading bin', i)
     print(data_list[0].shape)
     return data_list, issame_list
+
+def sort_list_by_num(list):
+    new_list = []
+    num_str = []
+    for str in list:
+        num_str.append(int(re.findall('\d+', str)[0]))
+    #num_str.sort(key=int)
+    indices = np.argsort(num_str)
+    for idx in range(len(indices)):
+        new_list.append(list[indices[idx]])
+    # new_list = list[indices]
+    return new_list
+
+def write_bin(folder_path, issame_list):
+    bins = []
+    files_in_folder = os.listdir(folder_path)
+    files_in_folder = sort_list_by_num(files_in_folder)
+    for file in zip(files_in_folder):
+        bin_img = mx.image.imread(os.path.join(folder_path, file[0]))
+        # bin_img = pickle.dumps(bin_img, protocol=2)
+        bins.append(bin_img)
+
+    # pickle.dump((bins, issame_list), '/home/deepjunior/PycharmProjects/unit_swap/InsightFace_TF/datasets/lfw_bin_changed/images_out1.bin', encoding='bytes')
+
+    file_Name = '/home/deepjunior/PycharmProjects/unit_swap/InsightFace_TF/datasets/lfw_bin_changed/lfw.bin'
+    # open the file for writing
+    # fileObject = open(file_Name, 'wb', encoding='bytes')
+    fileObject = open(file_Name, 'wb')
+
+    # this writes the object a to the
+    # file named 'testfile'
+    # byte_out = pickle.dumps((bins, issame_list), protocol=2)
+    pickle.dump((bins, issame_list), fileObject, protocol=2)
+    # pickle.dump(bins, fileObject, protocol=2)
+
+    # here we close the fileObject
+    fileObject.close()
+
+    # ,  encoding='bytes'
 
 
 if __name__ == '__main__':
@@ -141,4 +183,6 @@ if __name__ == '__main__':
     for db in args.eval_datasets:
         print('begin db %s convert.' % db)
         # mx2tfrecords_eval_data(args, db)
-        data_set = load_bin(db, args.image_size)
+        data_list, issame_list = load_bin(db, args.image_size, args)
+    write_bin('/home/deepjunior/PycharmProjects/unit_swap/InsightFace_TF/datasets/lfw_images', issame_list)
+    print('stop here')

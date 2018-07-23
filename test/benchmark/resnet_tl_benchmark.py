@@ -9,10 +9,12 @@ resnet = nets.resnet_v1
 
 if __name__ == '__main__':
     output_shape = 85164
-    batch_size = 128
+    # batch_size = 128
+    batch_size = 32
     image = tf.placeholder(name='input_x', shape=[None, 224, 224, 3], dtype=tf.float32)
     labels = tf.placeholder(name='input_label', shape=[None, output_shape], dtype=tf.float32)
     with slim.arg_scope(nets.resnet_utils.resnet_arg_scope()):
+        # nets = get_resnet(image, output_shape, 50, type='resnet', sess=None, pretrained=True)
         nets = get_resnet(image, output_shape, 50, type='resnet', sess=None, pretrained=False)
     print(nets.outputs)
     probabilities = tf.reduce_mean(tf.nn.softmax(nets.outputs, dim=-1))

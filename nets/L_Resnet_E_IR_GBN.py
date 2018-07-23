@@ -3,7 +3,7 @@ import tensorlayer as tl
 from tensorflow.contrib.layers.python.layers import utils
 import collections
 from tensorlayer.layers import Layer, list_remove_repeat
-from tl_layers_modify import GroupNormLayer
+from nets.tl_layers_modify import GroupNormLayer
 
 
 class ElementwiseLayer(Layer):

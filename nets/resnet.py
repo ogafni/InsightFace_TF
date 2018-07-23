@@ -3,7 +3,7 @@ import tensorlayer as tl
 from tensorflow.contrib.layers.python.layers import utils
 import collections
 from tensorlayer.layers import Layer, list_remove_repeat
-from nets_utils import get_variables_in_checkpoint_file
+from nets.nets_utils import get_variables_in_checkpoint_file
 
 
 class ElementwiseLayer(Layer):
@@ -348,7 +348,7 @@ def get_resnet(inputs, num_classes, num_layers, type='resnet', sess=None, pretra
                 resnet_v1_block('block3', base_depth=256, num_units=6, stride=2, rate=1),
                 resnet_v1_block('block4', base_depth=512, num_units=3, stride=1, rate=1)
             ]
-            ckpt_file_path = '../model_weights/resnet_v1_50.ckpt'
+            ckpt_file_path = '../../model_weights/resnet_v1_50.ckpt'
         elif num_layers == 101:
             blocks = [
                 resnet_v1_block('block1', base_depth=64, num_units=3, stride=2, rate=1),

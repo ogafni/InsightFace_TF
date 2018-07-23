@@ -10,11 +10,13 @@ from verification import ver_test
 
 def get_args():
     parser = argparse.ArgumentParser(description='input information')
-    parser.add_argument('--ckpt_file', default='/home/aurora/workspaces12/PycharmProjects/InsightFace_TF/output/ckpt/InsightFace_iter_',
+    parser.add_argument('--ckpt_file', default='/home/deepjunior/PycharmProjects/unit_swap/InsightFace_TF/model_weights/',
+                        type=str, help='the ckpt file path')
     # parser.add_argument('--ckpt_file', default='/home/aurora/workspaces12/PycharmProjects/InsightFace_TF/output/ckpt2/InsightFace_iter_best_',
-                       type=str, help='the ckpt file path')
+
     # parser.add_argument('--eval_datasets', default=['lfw', 'cfp_ff', 'cfp_fp', 'agedb_30'], help='evluation datasets')
-    parser.add_argument('--eval_datasets', default=['agedb_30'], help='evluation datasets')
+    # parser.add_argument('--eval_datasets', default=['agedb_30'], help='evluation datasets')
+    parser.add_argument('--eval_datasets', default=['lfw'], help='evluation datasets')
     parser.add_argument('--eval_db_path', default='./datasets/faces_ms1m_112x112', help='evluate datasets base path')
     parser.add_argument('--image_size', default=[112, 112], help='the image size')
     parser.add_argument('--net_depth', default=50, help='resnet depth, default is 50')
@@ -26,7 +28,8 @@ def get_args():
     #                                                   '150000.ckpt'], help='ckpt file indexes')
     # parser.add_argument('--ckpt_index_list', default=['180000.ckpt', '190000.ckpt', '200000.ckpt', '210000.ckpt', '220000.ckpt'], help='ckpt file indexes')
     # parser.add_argument('--ckpt_index_list', default=['270000.ckpt', '280000.ckpt', '290000.ckpt', '300000.ckpt', '310000.ckpt'], help='ckpt file indexes')
-    parser.add_argument('--ckpt_index_list', default=['730000.ckpt'], help='ckpt file indexes')
+    # parser.add_argument('--ckpt_index_list', default=['730000.ckpt'], help='ckpt file indexes')
+    parser.add_argument('--ckpt_index_list', default=['resnet_v1_50.ckpt'], help='ckpt file indexes')
     args = parser.parse_args()
     return args
 
